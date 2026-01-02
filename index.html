@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>İyi Ki Doğdun Çağla</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap');
+
+body{
+  margin:0;
+  font-family:'Segoe UI',sans-serif;
+  color:#fff;
+  text-align:center;
+  overflow-x:hidden;
+  background:
+    linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.65)),
+    url("arka-plan.png") center/cover fixed no-repeat;
+}
+
+/* INTRO */
+#intro{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.75);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+  animation:introOut 5s forwards;
+}
+#intro h1{
+  font-family:'Dancing Script',cursive;
+  font-size:4rem;
+}
+@keyframes introOut{
+  0%,70%{opacity:1}
+  100%{opacity:0;visibility:hidden}
+}
+
+/* HERO */
+.hero{
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+}
+.hero h1{
+  font-family:'Dancing Script',cursive;
+  font-size:4.8rem;
+}
+.hero h2{opacity:.9;font-size:1.5rem}
+.bouquet{font-size:3rem;margin:15px}
+
+/* COUNTDOWN */
+.countdown{
+  display:flex;
+  gap:20px;
+  margin-top:25px;
+}
+.box{
+  background:rgba(255,255,255,.25);
+  padding:15px 20px;
+  border-radius:15px;
+}
+.box span{
+  display:block;
+  font-size:2.2rem;
+  font-weight:bold;
+}
+
+/* BACKGROUND EFFECTS */
+.balloons,.hearts{position:fixed;inset:0;pointer-events:none;z-index:-1}
+.balloon{
+  position:absolute;
+  bottom:-150px;
+  width:70px;height:90px;
+  border-radius:50%;
+  opacity:.6;
+  animation:floatUp linear infinite;
+}
+@keyframes floatUp{to{transform:translateY(-130vh)}}
+.heart{
+  position:absolute;
+  bottom:-40px;
+  font-size:22px;
+  animation:heartUp 7s linear forwards;
+}
+@keyframes heartUp{to{transform:translateY(-120vh);opacity:0}}
+
+/* CARD */
+.card{
+  background:rgba(255,255,255,.2);
+  backdrop-filter:blur(8px);
+  padding:50px;
+  border-radius:25px;
+  max-width:1100px;
+  margin:80px auto;
+}
+
+/* ENVELOPE */
+.envelope{
+  width:280px;height:180px;
+  background:#fff;
+  border-radius:12px;
+  margin:20px auto;
+  position:relative;
+  cursor:pointer;
+}
+.flap{
+  position:absolute;
+  inset:0;
+  background:#eee;
+  clip-path:polygon(0 0,100% 0,50% 55%);
+  transform-origin:top;
+  transition:.8s;
+}
+.envelope.open .flap{transform:rotateX(180deg)}
+
+/* LETTER */
+#overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.75);
+  opacity:0;
+  pointer-events:none;
+  transition:.4s;
+  z-index:998;
+}
+#overlay.active{opacity:1;pointer-events:auto}
+
+#letter{
+  position:fixed;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%) scale(.8);
+  background:#fffdf6;
+  color:#333;
+  padding:45px;
+  max-width:600px;
+  width:90%;
+  border-radius:18px;
+  font-family:'Dancing Script',cursive;
+  font-size:1.7rem;
+  opacity:0;
+  pointer-events:none;
+  transition:.4s;
+  z-index:999;
+}
+#letter.open{
+  opacity:1;
+  pointer-events:auto;
+  transform:translate(-50%,-50%) scale(1);
+}
+
+/* TEXT ANIMATION */
+.typewriter span{
+  opacity:0;
+  animation:appear .05s forwards;
+}
+@keyframes appear{to{opacity:1}}
+.sparkle{
+  text-shadow:
+    0 0 6px rgba(255,215,160,.7),
+    0 0 12px rgba(255,200,120,.5);
+}
+
+/* GALLERY */
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:25px;
+}
+.photo{
+  background:#fff;
+  padding:10px;
+  border-radius:15px;
+  cursor:pointer;
+}
+.photo img{
+  width:100%;
+  height:200px;
+  object-fit:cover;
+  border-radius:10px;
+}
+
+/* LIGHTBOX */
+#lightbox{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.9);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+#lightbox img{max-width:90%;max-height:90%}
+
+@media(max-width:900px){
+  .gallery{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+
+<body>
+
+<div id="intro">
+  <h1>İyi Ki Doğdun Çağla 🌸</h1>
+</div>
+
+<div class="balloons"></div>
+<div class="hearts"></div>
+
+<section class="hero">
+  <h1>İyi ki doğdun Çağla ✨</h1>
+  <h2>Bugün senin günün</h2>
+  <div class="bouquet">💐</div>
+
+  <div class="countdown" id="countdown">
+    <div class="box"><span id="d">0</span>Gün</div>
+    <div class="box"><span id="h">0</span>Saat</div>
+    <div class="box"><span id="m">0</span>Dakika</div>
+    <div class="box"><span id="s">0</span>Saniye</div>
+  </div>
+</section>
+
+<div class="card">
+  <h2>✉️ Sana Bir Mektup</h2>
+  <div class="envelope" onclick="openLetter(this)">
+    <div class="flap"></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>📸 Anılarımız</h2>
+  <div class="gallery">
+    <div class="photo"><img src="foto1.jpg" onclick="openLightbox(this)"></div>
+    <div class="photo"><img src="foto2.jpg" onclick="openLightbox(this)"></div>
+    <div class="photo"><img src="foto3.jpg" onclick="openLightbox(this)"></div>
+    <div class="photo"><img src="foto4.jpg" onclick="openLightbox(this)"></div>
+    <div class="photo"><img src="foto5.jpg" onclick="openLightbox(this)"></div>
+    <div class="photo"><img src="foto6.jpg" onclick="openLightbox(this)"></div>
+    <div class="photo"><img src="foto7.jpg" onclick="openLightbox(this)"></div>
+    <div class="photo"><img src="foto8.jpg" onclick="openLightbox(this)"></div>
+    <div class="photo"><img src="foto9.jpg" onclick="openLightbox(this)"></div>
+    <div class="photo"><img src="foto10.jpg" onclick="openLightbox(this)"></div>
+  </div>
+</div>
+
+<div id="overlay" onclick="closeLetter()"></div>
+<div id="letter">
+  <p id="letterText" class="sparkle typewriter"></p>
+</div>
+
+<div id="lightbox" onclick="this.style.display='none'">
+  <img id="lightboxImg">
+</div>
+
+<script>
+/* COUNTDOWN */
+function getNextBirthday(){
+  const now=new Date();
+  let year=now.getFullYear();
+  let target=new Date(year,0,11,0,0,0);
+  if(now>target) target=new Date(year+1,0,11,0,0,0);
+  return target;
+}
+const targetDate=getNextBirthday();
+
+setInterval(()=>{
+  const diff=targetDate-new Date();
+  if(diff<=0){
+    countdown.innerHTML="<h2>🎉 İyi ki doğdun Çağla 🎉</h2>";
+    return;
+  }
+  d.innerText=Math.floor(diff/(1000*60*60*24));
+  h.innerText=Math.floor((diff/(1000*60*60))%24);
+  m.innerText=Math.floor((diff/(1000*60))%60);
+  s.innerText=Math.floor((diff/1000)%60);
+},1000);
+
+/* LETTER TEXT (ALT ALTA) */
+const message=`Sevgili Çağla 💖
+
+"Sevgili Çağla,
+  
+  Bugün takvimde sıradan bir gün olabilir ama benim için çok özel.
+  Çünkü bugün gülüşüyle ortamı aydınlatan, varlığıyla huzur veren birisinin doğum günü.
+  
+  Hayatıma kattığın neşe, destek ve samimiyet için sana gerçekten minnettarım.
+  Bazen bir kelimeyle, bazen sadece varlığınla herşeyi daha güzel hale getiriyorsun.
+  
+  Yeni yaşın sana sağlık, mutluluk ve kalbinden geçen tüm güzellikleri getirsin.
+  Her zaman yüzün gülsün, kalbin hep umutla dolu olsun
+  İyi ki varsın hanımefendi 💖`;
+
+function animateLetter(){
+  letterText.innerHTML="";
+  [...message].forEach((char,i)=>{
+    if(char === "\n"){
+      letterText.appendChild(document.createElement("br"));
+      return;
+    }
+    const span=document.createElement("span");
+    span.textContent=char;
+    span.style.animationDelay=`${i*40}ms`;
+    letterText.appendChild(span);
+  });
+}
+
+function openLetter(el){
+  el.classList.toggle("open");
+  overlay.classList.add("active");
+  letter.classList.add("open");
+  animateLetter();
+}
+function closeLetter(){
+  overlay.classList.remove("active");
+  letter.classList.remove("open");
+  document.querySelector(".envelope").classList.remove("open");
+}
+
+/* LIGHTBOX */
+function openLightbox(img){
+  lightbox.style.display="flex";
+  lightboxImg.src=img.src;
+}
+
+/* BALLOONS */
+setInterval(()=>{
+  const b=document.createElement("div");
+  b.className="balloon";
+  b.style.left=Math.random()*100+"vw";
+  b.style.background=`hsl(${Math.random()*360},70%,65%)`;
+  b.style.animationDuration=(18+Math.random()*10)+"s";
+  document.querySelector(".balloons").appendChild(b);
+  setTimeout(()=>b.remove(),30000);
+},3000);
+
+/* HEARTS */
+setInterval(()=>{
+  const h=document.createElement("div");
+  h.className="heart";
+  h.innerText="💖";
+  h.style.left=Math.random()*100+"vw";
+  document.querySelector(".hearts").appendChild(h);
+  setTimeout(()=>h.remove(),7000);
+},1200);
+</script>
+
+</body>
+</html>
